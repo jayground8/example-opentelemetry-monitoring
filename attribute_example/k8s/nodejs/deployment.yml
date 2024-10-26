@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nodejs-app
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: my-nodejs-app
+  template:
+    metadata:
+      labels:
+        app: my-nodejs-app
+    spec:
+      containers:
+      - image: app:nodejs
+        name: api-nodejs
+        imagePullPolicy: Never
+        ports:
+        - name: api-nodejs-port
+          containerPort: 3000
+        env:
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://$(NODE_IP):4318
+        - name: OTEL_SERVICE_NAME
+          value: api-nodejs
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: k8s.container.name=api-nodejs,k8s.namespace.name=default
+        - name: OTEL_LOG_LEVEL
+          value: DEBUG

@@ -1,0 +1,26 @@
+grafana:
+  enabled: false
+kubeStateMetrics:
+  enabled: false
+kube-state-metrics:
+  prometheus:
+    monitor:
+      enabled: false
+nodeExporter:
+  enabled: false
+prometheus-node-exporter:
+  prometheus:
+    monitor:
+      enabled: false
+prometheus:
+  prometheusSpec:
+    replicas: 2
+    thanos:
+      objectStorageConfig:
+        existingSecret:
+          name: thanos-objstore-secret
+          key: objstore.yml
+  thanosService:
+    enabled: true
+  thanosServiceMonitor:
+    enabled: true

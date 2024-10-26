@@ -1,0 +1,43 @@
+config:
+  service:
+    telemetry:
+      logs:
+        level: info
+    pipelines:
+      metrics:
+        receivers:
+          - otlp
+        exporters:
+          - prometheusremotewrite
+          - debug
+  exporters:
+    prometheusremotewrite:
+      endpoint: http://thanos-receive:19291/api/v1/receive
+      tls:
+        insecure: true
+      remote_write_queue:
+        enabled: true
+        queue_size: 100000
+        num_consumers: 50
+    debug:
+      verbosity: detailed
+      sampling_initial: 5
+      sampling_thereafter: 200
+ports:
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+mode: daemonset
+image:
+  repository: otel/opentelemetry-collector-contrib
+  tag: 0.111.0
+hostNetwork: false
+presets:
+  logsCollection:
+    enabled: false
+    includeCollectorLogs: false
