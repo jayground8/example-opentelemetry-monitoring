@@ -6,6 +6,10 @@ objstoreConfig: |-
     access_key: minio
     secret_key: minio123
     insecure: true
+# image:
+#   repository: thanos
+#   tag: v0.36.1
+#   pullPolicy: Never
 query:
   dnsDiscovery:
     sidecarsService: prometheus-kube-prometheus-thanos-discovery
